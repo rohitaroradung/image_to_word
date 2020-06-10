@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:display="http://www.w3.org/1999/xhtml" xmlns:Visibility="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>image to word file</title>
+    <style>
+        {
+        font-size:30px;
+        }
+    </style>
+</head>
+<body>
+ <input id="image-selector" type="file">
+    <button id="predict-button">Predict</button>
+    <p id ="para"></p>
+    <a href="#" id="Download-button" target="blank" style=" visibility: hidden"><button >Download</button></a>
+
+
+
+    <p style="font-weight:bold">Selected Image</p>
+    <img id="selected-image" src=""/>
+ <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+ <script>
+    let base64Image;
+    $("#image-selector").change(function() {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            let dataURL = reader.result;
+            $('#selected-image').attr("src", dataURL);
+            var replacingstring = dataURL.split(",")
+            base64Image = dataURL.replace(replacingstring[0],"");
+
+            console.log(base64Image);
+
+        }
+        reader.readAsDataURL($("#image-selector")[0].files[0]);
+
+    });
+
+    $("#predict-button").click(function(){
+        let message = {
+            image: base64Image
+        }
+        console.log(message);
+        document.getElementById("para").innerHTML = "Your document is getting ready.......";
+        $.post("http://localhost:5000/get-document", JSON.stringify(message), function(response){
+
+            console.log(response);
+            document.getElementById("para").innerHTML = "Your document is ready";
+            document.getElementById("Download-button").style.visibility = "visible";
+            document_name= response['document-name']
+            $("#Download-button").attr("href", "http://localhost:5000/download/"+document_name);
+
+
+
+        });
+    });
+</script>
+
+</body>
+</html>
