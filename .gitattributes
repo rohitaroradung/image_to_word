@@ -1,0 +1,2 @@
+font_recognization.h5 filter=lfs diff=lfs merge=lfs -text
+weights.best.hdf5 filter=lfs diff=lfs merge=lfs -text
